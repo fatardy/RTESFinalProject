@@ -2,10 +2,10 @@
 
 
 namespace l3gd20 {
-class L3GD20Gyroscope{
+class Gyroscope{
 
 public:
-    L3GD20Gyroscope(SPI *spi_ptr, PinName ssel);
+    Gyroscope(SPI *spi_ptr, PinName ssel);
 
     int init();
 
@@ -48,11 +48,24 @@ public:
 
     void read_registers(uint8_t reg, uint8_t* data, uint8_t length);
 
+    float average_Velocity(float angular_x);
+
+    void push(float angular_x);
+
     private:
         static const uint8_t Gyroscope_ID = 0xD3;
         SPI *spi_ptr;    
         DigitalOut *_spi_ssel_ptr;
+
+        uint8_t size = 30;
+        float queue[30];
+        uint8_t front;
+        uint8_t rear;
+        bool is_queue_full;
+        float average_angular_velocity;
+        uint8_t queue_count;
+        uint8_t zero_count;
     };
 }
 
-using l3gd20::L3GD20Gyroscope;
+using l3gd20::Gyroscope;
