@@ -147,7 +147,7 @@ void configScreenView() {
     lcd.SetFont(&Font24);
         
     while(1) {
-        sprintf((char*)text1, "<  %d  >", userHeight);
+        sprintf((char*)text1, " <  %d  > ", userHeight);
         lcd.DisplayStringAt(0, 170, (uint8_t *)&text1, CENTER_MODE);
 
         ts.GetState(&TS_State);
@@ -291,25 +291,28 @@ void resultScreenView() {
     lcd.SetTextColor(LCD_COLOR_DARKGREEN);
     lcd.SetFont(&Font24);
     lcd.DisplayStringAt(0, 40, (uint8_t *)"Done!", CENTER_MODE);
+
+    lcd.SetTextColor(LCD_COLOR_ORANGE);
+    lcd.DrawLine(screenWidth / 4, 72, (screenWidth / 4) * 3, 72);
     
     wait();
 
     lcd.SetTextColor(LCD_COLOR_BLUE);
     lcd.SetFont(&Font16);
-    lcd.DisplayStringAt(0, 100, (uint8_t *)"Distance Travelled", CENTER_MODE);
+    lcd.DisplayStringAt(0, 100, (uint8_t *)"Distance", CENTER_MODE);
+    lcd.DisplayStringAt(0, 120, (uint8_t *)"Travelled", CENTER_MODE);
     wait();
     lcd.SetFont(&Font24);
     lcd.SetTextColor(LCD_COLOR_RED);
     sprintf((char*)text1, "%d meters", dist);
-    lcd.DisplayStringAt(0, 125, (uint8_t *)&text1, CENTER_MODE);
+    lcd.DisplayStringAt(0, 137, (uint8_t *)&text1, CENTER_MODE);
     wait();
     lcd.SetFont(&Font16);
-    lcd.SetTextColor(LCD_COLOR_GREEN);
-    lcd.DisplayStringAt(0, 180, (uint8_t *)"in", CENTER_MODE);
-    wait();
+    lcd.SetTextColor(LCD_COLOR_BROWN);
+    lcd.DisplayStringAt(0, 190, (uint8_t *)"in", CENTER_MODE);
     lcd.SetTextColor(LCD_COLOR_MAGENTA);
     sprintf((char*)text2, "%d seconds", avg_speed);
-    lcd.DisplayStringAt(0, 200, (uint8_t *)&text2, CENTER_MODE);
+    lcd.DisplayStringAt(0, 205, (uint8_t *)&text2, CENTER_MODE);
     wait();
 
     lcd.SetTextColor(0xFF57068C);
