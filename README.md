@@ -1,5 +1,5 @@
 # RTES Final Project
-Final Project for ECE-GY 6143 Real Time Embedded Systems by Dr. Matthew Campisi in New York University.
+Final Project for ECE-GY 6143 Real Time Embedded Systems (Fall '21) under Dr. Matthew Campisi in New York University.
 * Rituraj Singh (rsg8554@nyu.edu)
 * Aradhya Alamuru (aa9405@nyu.edu)  
 

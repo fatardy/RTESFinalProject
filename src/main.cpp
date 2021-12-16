@@ -40,13 +40,16 @@ TS_StateTypeDef TS_State;
 uint16_t touchX, touchY;
 // NOTE:(0, 0) is at the bottom left; (x, y) also register the black part of the screen;
 
+int userHeight = 178;
+
 // screens
 enum Screens {
     SPLASH_SCREEN = 1,
-    MAIN_SCREEN = 2,
-    RESULT_SCREEN = 3,
+    CONFIG_SCREEN,
+    MAIN_SCREEN,
+    RESULT_SCREEN,
 };
-int activeScreen = RESULT_SCREEN;
+int activeScreen = SPLASH_SCREEN;
 
 
 void wait() {
@@ -63,7 +66,7 @@ void splashScreenView() {
     lcd.SetFont(&Font24);
     lcd.DisplayStringAt(0, LINE(3), (uint8_t *)"RTES", CENTER_MODE);
     lcd.SetTextColor(LCD_COLOR_MAGENTA);
-    lcd.DisplayStringAt(0, LINE(4), (uint8_t *)"Final Project", CENTER_MODE);
+    lcd.DisplayStringAt(0, LINE(4), (uint8_t *)"Need For Speed", CENTER_MODE);
 
     wait();
 
@@ -97,7 +100,7 @@ void splashScreenView() {
         printf("x - %d, y - %d\n", touchX, touchY);
 
         if ((TS_State.TouchDetected) && (touchY < 40)) {
-            activeScreen = MAIN_SCREEN;
+            activeScreen = CONFIG_SCREEN;
             break;
         }
 
@@ -105,6 +108,70 @@ void splashScreenView() {
         // wait();
         // lcd.DisplayStringAt(0, screenHeight - 32, (uint8_t *)"            ", CENTER_MODE);
         // wait();
+    }
+}
+
+void increaseHeight() {
+    userHeight++;
+}
+void decreaseHeight() {
+    userHeight--;
+}
+
+void configScreenView() {
+    lcd.Clear(LCD_COLOR_WHITE);
+    lcd.SetBackColor(LCD_COLOR_WHITE);
+    
+    wait();
+
+    lcd.SetTextColor(LCD_COLOR_BLACK);
+    lcd.SetFont(&Font24);
+    lcd.DisplayStringAt(0, 40, (uint8_t *)"Select Height", CENTER_MODE);
+    lcd.SetFont(&Font16);
+    lcd.SetTextColor(LCD_COLOR_GRAY);
+    lcd.DisplayStringAt(0, 60, (uint8_t *)"(centimeters)", CENTER_MODE);
+    
+    lcd.SetFont(&Font12);
+    lcd.DisplayStringAt(0, LINE(7), (uint8_t *)"We use your height to", CENTER_MODE);
+    lcd.DisplayStringAt(0, LINE(8), (uint8_t *)"calculate speed", CENTER_MODE);
+
+    lcd.SetTextColor(LCD_COLOR_DARKMAGENTA);
+    lcd.SetBackColor(LCD_COLOR_DARKMAGENTA);
+    lcd.FillRect(screenMargin, screenHeight - 52, screenWidth - (2 * screenMargin), 44);
+    lcd.SetTextColor(LCD_COLOR_WHITE);
+    lcd.SetFont(&Font16);
+    lcd.DisplayStringAt(0, screenHeight - 36, (uint8_t *)"GO!", CENTER_MODE);
+    
+    lcd.SetTextColor(LCD_COLOR_DARKRED);
+    lcd.SetBackColor(LCD_COLOR_WHITE);
+    lcd.SetFont(&Font24);
+        
+    while(1) {
+        sprintf((char*)text1, "<  %d  >", userHeight);
+        lcd.DisplayStringAt(0, 170, (uint8_t *)&text1, CENTER_MODE);
+
+        ts.GetState(&TS_State);
+        touchX = TS_State.X;
+        touchY = TS_State.Y;
+
+        printf("x - %d, y - %d\n", touchX, touchY);
+
+        if (TS_State.TouchDetected) {
+            if (touchY < 40) {
+                activeScreen = MAIN_SCREEN;
+                break;
+            }
+            if ((touchY > 80) && (touchY < 160)) {
+                if (touchX > 160) {
+                    increaseHeight();
+                    // wait();
+                }
+                if (touchX < 80) {
+                    decreaseHeight();
+                    // wait();
+                }
+            }
+        }
     }
 }
 
@@ -294,6 +361,9 @@ int main() {
         switch (activeScreen) {
             case SPLASH_SCREEN:
                 splashScreenView();
+                break;
+            case CONFIG_SCREEN:
+                configScreenView();
                 break;
             case MAIN_SCREEN:
                 mainScreenView();
