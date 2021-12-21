@@ -1,6 +1,16 @@
+/**
+  ******************************************************************************
+  * @file    GYRO_SENSOR.cpp 
+  * @author  Rituraj Singh, Aradhya Alamuru
+  * @brief   Main File to interface with Gyroscope
+  *          This file provides API's to configure and read/write gyroscope 
+  ******************************************************************************
+  **/
+
 #include "mbed.h"
 #include "GYRO_SENSOR.h"
 
+//Constructor to initialize SPI
 Gyroscope::Gyroscope(SPI *spi_ptr, PinName ssel) {
     this->spi_ptr = spi_ptr;
     spi_ptr->frequency(10000000);
@@ -12,6 +22,7 @@ Gyroscope::Gyroscope(SPI *spi_ptr, PinName ssel) {
     }
 }
 
+//This function will Write value to the register address passed as param
 void Gyroscope::write_register(uint8_t reg, uint8_t val) {
     reg = reg & 0x7F;
     if (_spi_ssel_ptr != NULL) {
@@ -24,6 +35,7 @@ void Gyroscope::write_register(uint8_t reg, uint8_t val) {
     }
 }
 
+//This function will read value from the register address passed as param
 uint8_t Gyroscope::read_register(uint8_t reg) {
     uint8_t val;
     reg = reg | 0x80;
@@ -39,6 +51,7 @@ uint8_t Gyroscope::read_register(uint8_t reg) {
     return val;
 }
 
+ //A wrapper function for write_register with a mask
 void Gyroscope::update_register(uint8_t reg, uint8_t val, uint8_t mask) {
     uint8_t reg_val = read_register(reg);
     reg_val &= ~mask;
@@ -47,6 +60,7 @@ void Gyroscope::update_register(uint8_t reg, uint8_t val, uint8_t mask) {
     write_register(reg, reg_val);
 }
 
+//To initialize Gyroscope and configure CTR_REG1-5
 int Gyroscope::init() {
     front = -1, rear = -1;
     is_queue_full = 0;
@@ -86,6 +100,8 @@ int Gyroscope::init() {
     return MBED_SUCCESS;
 }
 
+//This function will read length bytes from register with address reg
+//Read values are stores in array passed as param
 void Gyroscope::read_registers(uint8_t reg, uint8_t* data, uint8_t length) {
         reg |= 0x60; // read multiple bytes
         reg |= 0x80; // read mode
@@ -99,6 +115,9 @@ void Gyroscope::read_registers(uint8_t reg, uint8_t* data, uint8_t length) {
         }
 }
 
+//This function will read 8-bit low data, left shit it by 8 and read and append
+//8-bit high data. Result will be 16-bit data
+//Used to read OUT_X,OUT_Y and OUT_Z registers in dps
 void Gyroscope::read_data_16(int16_t data[3]) {
     uint8_t raw_data[6];
     read_registers(OUT_X_L_ADDR, raw_data, 6);
@@ -107,6 +126,9 @@ void Gyroscope::read_data_16(int16_t data[3]) {
     data[2] = (int16_t)(raw_data[5] << 8) + raw_data[4];
 }
 
+//This function will push Samples into a Circular Queue
+//Once queue is full, old samples are de-queued and new samples
+//are en-queued at a run time
 void Gyroscope::push(float angular_x)
 {
     if(angular_x > 0){
@@ -121,7 +143,7 @@ void Gyroscope::push(float angular_x)
             queue[rear] = angular_x;
             average_angular_velocity = ((average_angular_velocity * queue_count) + angular_x)/(queue_count+1);
             queue_count++;  
-            printf("1 : vel:%f qcnt:%d\n",average_angular_velocity,queue_count);
+            //printf("1 : vel:%f qcnt:%d\n",average_angular_velocity,queue_count);
         }
         else{
             average_angular_velocity = ((average_angular_velocity * queue_count) - queue[front])/(queue_count-1);
@@ -129,12 +151,14 @@ void Gyroscope::push(float angular_x)
             front = (front + 1) % size;
             queue[rear] = angular_x;
             average_angular_velocity = ((average_angular_velocity * (queue_count-1)) + angular_x)/(queue_count);
-            printf("2 : vel:%f qcnt:%d\n",average_angular_velocity,queue_count);
+            //printf("2 : vel:%f qcnt:%d\n",average_angular_velocity,queue_count);
         }    
     }
 
 }
 
+//Function to take care of STOP(i.e when user stops and walks again)
+//Also a wrapper function for putting samples in a circular queue
 float Gyroscope::average_Velocity(float angular_x)
 {
     if(uint8_t(angular_x) == 0){
