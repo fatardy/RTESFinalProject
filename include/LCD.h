@@ -16,40 +16,42 @@ enum Screens {
     RESULT_SCREEN,
 };
 
-//This function will initialize the LCD with the (x,y)
-//Background color, text color and font size
+// Initialize LCD with (x, y)
+// Check if touchscreen initialized correctly. If not show error;
 void LCD_Init();
 
 void decreaseHeight();
 void increaseHeight();
 
-//This function will display the first screen of the device
-//Once the user touches the 'START' button,it will move to 2nd screen
+// Display the first screen UI on the LCD
+// Once user taps the 'START' button, move to the next screen;
 uint32_t splashScreenView();
 
-//This function is used to initialize 2nd Screen for the device
-//IT will ask user for the height(in cm)
-//Once user selects the height an press 'GO' button , it will jump to 3rd screen
+// Initialize the second screen UI for the LCD
+// Ask user to input height in centimeters;
+// Once user taps 'GO', jump to the 3rd screen;
 uint32_t configScreenView();
 
-//This function is attached in a ticker to be called after every 1 second
-//This function will display Time elapsed, Speed and distance travelled
+// Initialize the ticker called every one second;
+// Displays the time elapsed, the speed and the distance travelled;
 void mainScreenTickerFunc();
 
-//This is the 3rd and main screen which will display time elapsed,
-//Speed and distance travelled by the user
-//Gyroscope is read in this function at a 100HZ sampling rate
-//Speed and distance are displayed using a ticker function
-//Ticker is attached to mainScreenTickerFunc
+// Main screen UI used to display the time elapsed, speed,
+// and the distance travelled by the user;
+// Gyroscope is read in this functio at a 100Hz sampling rate;
+// Speed and distance displayed using a ticker function
+// Ticker attached to mainScreenTickerFunc;
 uint32_t mainScreenView();
 
-//This function is used to display the 4th and the final screen
-//Once the user stops and press Done button, it will display total distance travelled 
-//in complete journey with total time
-//If user Presses "TRY AGAIN", it will jum to starting screen of the device and Device is reset
+// Display the final screen: results screen;
+// Once user stops and taps on 'DONE', display the 
+// total distance travelled in time elapsed;
+// 'TRY AGAIN' to jump back to the starting screen of the project;
 uint32_t resultScreenView();
 
-//Functions to hold the screen width and Height 
+// Helper functions return screen height and width;
 uint32_t getScreenWidth();
 uint32_t getScreenHeight();
 
+// Draw skeleton for the graph view;
+void drawGraphViewSkeletonView();

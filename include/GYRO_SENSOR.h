@@ -12,10 +12,10 @@ namespace l3gd20 {
 class Gyroscope{
 
 public:
-    //Constructor to initialize SPI
+    // Constructor to initialize SPI
     Gyroscope(SPI *spi_ptr, PinName ssel);
 
-    //To initialize Gyroscope and configure CTR_REG1-5
+    // To initialize Gyroscope and configure CTR_REG1-5
     int init();
 
     enum Registers {
@@ -47,40 +47,40 @@ public:
         INT1_DURATION_ADDR = 0x38,
     };
 
-    //This function will read value from the register address passed as param
+    // This function will read value from the register address passed as param
     uint8_t read_register(uint8_t reg);
 
-    //This function will Write value to the register address passed as param
+    // This function will Write value to the register address passed as param
     void write_register(uint8_t reg, uint8_t val);  
 
-    //A wrapper function for write_register with a mask
+    // A wrapper function for write_register with a mask
     void update_register(uint8_t reg, uint8_t val, uint8_t mask);
 
-    //This function will read 8-bit low data, left shit it by 8 and read and append
-    //8-bit high data. Result will be 16-bit data
-    //Used to read OUT_X,OUT_Y and OUT_Z registers in dps
+    // This function will read 8-bit low data, left shit it by 8 and read and append
+    // 8-bit high data. Result will be 16-bit data
+    // Used to read OUT_X,OUT_Y and OUT_Z registers in dps
     void read_data_16(int16_t data[3]);
 
-    //This function will read length bytes from register with address reg
-    //Read values are stores in array passed as param
+    // This function will read length bytes from register with address reg
+    // Read values are stores in array passed as param
     void read_registers(uint8_t reg, uint8_t* data, uint8_t length);
 
-    //Function to take care of STOP(i.e when user stops and walks again)
-    //Also a wrapper function for putting samples in a circular queue
+    // Function to take care of STOP(i.e when user stops and walks again)
+    // Also a wrapper function for putting samples in a circular queue
     float average_Velocity(float angular_x);
 
-    //This function will push Samples into a Circular Queue
-    //Once queue is full, old samples are de-queued and new samples
-    //are en-queued at a run time
+    // This function will push Samples into a Circular Queue
+    // Once queue is full, old samples are de-queued and new samples
+    // are en-queued at a run time
     void push(float angular_x);
 
     private:
-        //Whoami Register
+        // Whoami Register
         static const uint8_t Gyroscope_ID = 0xD3;
         SPI *spi_ptr;    
         DigitalOut *_spi_ssel_ptr;
 
-        //Circular queue size
+        // Circular queue size
         uint8_t size = 30;
         float queue[30];
 

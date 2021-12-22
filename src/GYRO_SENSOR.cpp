@@ -10,7 +10,7 @@
 #include "mbed.h"
 #include "GYRO_SENSOR.h"
 
-//Constructor to initialize SPI
+// Constructor to initialize SPI
 Gyroscope::Gyroscope(SPI *spi_ptr, PinName ssel) {
     this->spi_ptr = spi_ptr;
     spi_ptr->frequency(10000000);
@@ -22,7 +22,7 @@ Gyroscope::Gyroscope(SPI *spi_ptr, PinName ssel) {
     }
 }
 
-//This function will Write value to the register address passed as param
+// This function will Write value to the register address passed as param
 void Gyroscope::write_register(uint8_t reg, uint8_t val) {
     reg = reg & 0x7F;
     if (_spi_ssel_ptr != NULL) {
@@ -35,7 +35,7 @@ void Gyroscope::write_register(uint8_t reg, uint8_t val) {
     }
 }
 
-//This function will read value from the register address passed as param
+// This function will read value from the register address passed as param
 uint8_t Gyroscope::read_register(uint8_t reg) {
     uint8_t val;
     reg = reg | 0x80;
@@ -51,7 +51,7 @@ uint8_t Gyroscope::read_register(uint8_t reg) {
     return val;
 }
 
- //A wrapper function for write_register with a mask
+// A wrapper function for write_register with a mask
 void Gyroscope::update_register(uint8_t reg, uint8_t val, uint8_t mask) {
     uint8_t reg_val = read_register(reg);
     reg_val &= ~mask;
@@ -60,7 +60,7 @@ void Gyroscope::update_register(uint8_t reg, uint8_t val, uint8_t mask) {
     write_register(reg, reg_val);
 }
 
-//To initialize Gyroscope and configure CTR_REG1-5
+// To initialize Gyroscope and configure CTR_REG1-5
 int Gyroscope::init() {
     front = -1, rear = -1;
     is_queue_full = 0;
@@ -82,26 +82,26 @@ int Gyroscope::init() {
     update_register(CTRL_REG4_ADDR, 0x00, 0xC0);
     update_register(CTRL_REG5_ADDR, 0x03, 0x03);
 
-    update_register(CTRL_REG3_ADDR, 0x00, 0x0F); //Disable interrupts
+    update_register(CTRL_REG3_ADDR, 0x00, 0x0F); // Disable interrupts
 
-    update_register(CTRL_REG5_ADDR, 0x00, 0x40); //Disable FIFO
+    update_register(CTRL_REG5_ADDR, 0x00, 0x40); // Disable FIFO
     update_register(FIFO_CTRL_REG_ADDR, 0x00, 0xE0); // configure FIFO bypass mode
-    update_register(CTRL_REG4_ADDR, 0x00, 0x30); //Set Full Scale 250
+    update_register(CTRL_REG4_ADDR, 0x00, 0x30); // Set Full Scale 250
 
-    update_register(CTRL_REG5_ADDR, 0, 0x10); //High Pass filter disable
+    update_register(CTRL_REG5_ADDR, 0, 0x10); // High Pass filter disable
 
-    update_register(CTRL_REG2_ADDR, 0, 0x0F); //Disable HPF mode config
-    update_register(CTRL_REG1_ADDR, 0, 0x30); //Bandwidth Selection 00
+    update_register(CTRL_REG2_ADDR, 0, 0x0F); // Disable HPF mode config
+    update_register(CTRL_REG1_ADDR, 0, 0x30); // Bandwidth Selection 00
 
-    update_register(CTRL_REG1_ADDR, 0, 0xC0); //Output Data rate ODR :95hz i.e 0
+    update_register(CTRL_REG1_ADDR, 0, 0xC0); // Output Data rate ODR :95hz i.e 0
 
-    update_register(CTRL_REG1_ADDR, 0x0F, 0x0F); //Enable gyroscope ; power up
+    update_register(CTRL_REG1_ADDR, 0x0F, 0x0F); // Enable gyroscope ; power up
 
     return MBED_SUCCESS;
 }
 
-//This function will read length bytes from register with address reg
-//Read values are stores in array passed as param
+// This function will read length bytes from register with address reg
+// Read values are stores in array passed as param
 void Gyroscope::read_registers(uint8_t reg, uint8_t* data, uint8_t length) {
         reg |= 0x60; // read multiple bytes
         reg |= 0x80; // read mode
@@ -115,9 +115,9 @@ void Gyroscope::read_registers(uint8_t reg, uint8_t* data, uint8_t length) {
         }
 }
 
-//This function will read 8-bit low data, left shit it by 8 and read and append
-//8-bit high data. Result will be 16-bit data
-//Used to read OUT_X,OUT_Y and OUT_Z registers in dps
+// This function will read 8-bit low data, left shit it by 8 and read and append
+// 8-bit high data. Result will be 16-bit data
+// Used to read OUT_X,OUT_Y and OUT_Z registers in dps
 void Gyroscope::read_data_16(int16_t data[3]) {
     uint8_t raw_data[6];
     read_registers(OUT_X_L_ADDR, raw_data, 6);
@@ -126,9 +126,9 @@ void Gyroscope::read_data_16(int16_t data[3]) {
     data[2] = (int16_t)(raw_data[5] << 8) + raw_data[4];
 }
 
-//This function will push Samples into a Circular Queue
-//Once queue is full, old samples are de-queued and new samples
-//are en-queued at a run time
+// This function will push Samples into a Circular Queue
+// Once queue is full, old samples are de-queued and new samples
+// are en-queued at a run time
 void Gyroscope::push(float angular_x)
 {
     if(angular_x > 0){
@@ -157,8 +157,8 @@ void Gyroscope::push(float angular_x)
 
 }
 
-//Function to take care of STOP(i.e when user stops and walks again)
-//Also a wrapper function for putting samples in a circular queue
+// Function to take care of STOP(i.e when user stops and walks again)
+// Also a wrapper function for putting samples in a circular queue
 float Gyroscope::average_Velocity(float angular_x)
 {
     if(uint8_t(angular_x) == 0){
