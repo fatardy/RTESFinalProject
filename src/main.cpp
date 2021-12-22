@@ -1,28 +1,30 @@
 #include <LCD.h>
 
+uint32_t activeScreen;
+
 int main() {
 
     LCD_Init();
 
     // Init with first screen;
-    uint32_t activeScreen = SPLASH_SCREEN;
+    activeScreen = SPLASH_SCREEN;
     
     while(1) {
         switch (activeScreen) {
             case SPLASH_SCREEN:
-                activeScreen = splashScreenView();
+                splashScreenView();
                 break;
             case CONFIG_SCREEN:
-                activeScreen = configScreenView();
+                configScreenView();
                 break;
             case MAIN_SCREEN:
-                activeScreen = mainScreenView();
+                mainScreenView();
                 break;
             case RESULT_SCREEN:
-                activeScreen = resultScreenView();
+                resultScreenView();
                 break;
             default:
-                activeScreen = splashScreenView();
+                splashScreenView();
         }
     }
 

@@ -16,6 +16,8 @@ enum Screens {
     RESULT_SCREEN,
 };
 
+extern uint32_t activeScreen;
+
 // Initialize LCD with (x, y)
 // Check if touchscreen initialized correctly. If not show error;
 void LCD_Init();
@@ -25,12 +27,12 @@ void increaseHeight();
 
 // Display the first screen UI on the LCD
 // Once user taps the 'START' button, move to the next screen;
-uint32_t splashScreenView();
+void splashScreenView();
 
 // Initialize the second screen UI for the LCD
 // Ask user to input height in centimeters;
 // Once user taps 'GO', jump to the 3rd screen;
-uint32_t configScreenView();
+void configScreenView();
 
 // Initialize the ticker called every one second;
 // Displays the time elapsed, the speed and the distance travelled;
@@ -41,13 +43,13 @@ void mainScreenTickerFunc();
 // Gyroscope is read in this functio at a 100Hz sampling rate;
 // Speed and distance displayed using a ticker function
 // Ticker attached to mainScreenTickerFunc;
-uint32_t mainScreenView();
+void mainScreenView();
 
 // Display the final screen: results screen;
 // Once user stops and taps on 'DONE', display the 
 // total distance travelled in time elapsed;
 // 'TRY AGAIN' to jump back to the starting screen of the project;
-uint32_t resultScreenView();
+void resultScreenView();
 
 // Helper functions return screen height and width;
 uint32_t getScreenWidth();

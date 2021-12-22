@@ -7,7 +7,7 @@
   ******************************************************************************
   **/
 #include "GYRO_SENSOR.h"
-#include "LCD.h"
+#include <LCD.h>
 
 //Gyroscope value below this will be discarded for calculating average velocity
 #define ZERO_RATE_NOISE 0.280000
@@ -88,8 +88,7 @@ void LCD_Init(){
 
 // Display the first screen UI on the LCD
 // Once user taps the 'START' button, move to the next screen;
-uint32_t splashScreenView() {
-    uint32_t activeScreen;
+void splashScreenView() {
     lcd.Clear(LCD_COLOR_WHITE);
     lcd.SetBackColor(LCD_COLOR_WHITE);
     
@@ -133,7 +132,6 @@ uint32_t splashScreenView() {
         }
     
     }
-    return activeScreen;
 }
 
 void increaseHeight() {
@@ -146,8 +144,7 @@ void decreaseHeight() {
 // Initialize the second screen UI for the LCD
 // Ask user to input height in centimeters;
 // Once user taps 'GO', jump to the 3rd screen;
-uint32_t configScreenView() {
-    uint32_t activeScreen;
+void configScreenView() {
     userHeight = 178;
     lcd.Clear(LCD_COLOR_WHITE);
     lcd.SetBackColor(LCD_COLOR_WHITE);
@@ -218,7 +215,6 @@ uint32_t configScreenView() {
             }
         }
     }
-    return activeScreen;
 }
 
 
@@ -345,9 +341,7 @@ void mainScreenTickerFunc() {
 // Gyroscope is read in this functio at a 100Hz sampling rate;
 // Speed and distance displayed using a ticker function
 // Ticker attached to mainScreenTickerFunc;
-uint32_t mainScreenView() {
-    uint32_t activeScreen;
-    
+void mainScreenView() {
     speed = 0;
     dist = 0;
     avg_speed = 0;
@@ -448,7 +442,6 @@ uint32_t mainScreenView() {
     }
 
     tick.detach();
-    return activeScreen;
 }
 
 
@@ -456,8 +449,7 @@ uint32_t mainScreenView() {
 // Once user stops and taps on 'DONE', display the 
 // total distance travelled in time elapsed;
 // 'TRY AGAIN' to jump back to the starting screen of the project;
-uint32_t resultScreenView() {
-    uint32_t activeScreen;
+void resultScreenView() {
     wait();
     lcd.Clear(LCD_COLOR_WHITE);
     lcd.SetBackColor(LCD_COLOR_WHITE);
@@ -510,5 +502,4 @@ uint32_t resultScreenView() {
             break;
         }
     }
-    return activeScreen;
 }
