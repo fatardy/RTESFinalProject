@@ -57,3 +57,39 @@ uint32_t getScreenHeight();
 
 // Draw skeleton for the graph view;
 void drawGraphViewSkeletonView();
+
+extern LCD_DISCO_F429ZI lcd; // LCD Object
+extern TS_DISCO_F429ZI ts; // Touch Screen Object
+
+extern void wait();
+
+
+// text arrays used for printing on lcd
+extern uint8_t text1[30];
+extern uint8_t text2[30];
+extern uint8_t text3[30];
+
+extern uint32_t screenMargin; // defined for ui
+// Touchscreen state;
+extern TS_StateTypeDef TS_State;
+extern uint16_t touchX, touchY;
+// NOTE:(0, 0) is at the bottom left; (x, y) also register the black part of the screen;
+
+// User asked to set height;
+extern float inputUserHeight; // default is my height
+// ARC_length used to calculate linear velocity
+extern float ARC_length;
+
+// Show live graph or display text
+extern bool showGraphView;
+// Bool to exit graph view, cause it plots only 30s
+extern bool exitGraphViewBool;
+
+// For drawing live graph;
+extern uint8_t screenMarginForGraph;
+extern uint8_t dividerHeightInGraph;
+
+// Helper function to return height and width of lcd;
+extern uint32_t getScreenWidth();
+extern uint32_t getScreenHeight();
+// width is 240; height is 320;

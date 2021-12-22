@@ -8,8 +8,18 @@
   **/
 #include "mbed.h"
 
+extern float speed;
+extern float distanceTravelled;
+// extern float gyroX;
+// extern float gyroY;
+// extern float gyroZ;
+// extern float gyroX1;
+extern float avg_speed;
+extern bool debug_flag;
+extern uint32_t secondsCount;
+
 namespace l3gd20 {
-class Gyroscope{
+class Gyroscope {
 
 public:
     // Constructor to initialize SPI
