@@ -25,12 +25,12 @@ void increaseHeight();
 
 //This function will display the first screen of the device
 //Once the user touches the 'START' button,it will move to 2nd screen
-uint32_t splashScreenView(uint32_t screenWidth,uint32_t screenHeight);
+uint32_t splashScreenView();
 
 //This function is used to initialize 2nd Screen for the device
 //IT will ask user for the height(in cm)
 //Once user selects the height an press 'GO' button , it will jump to 3rd screen
-uint32_t configScreenView(uint32_t screenWidth,uint32_t screenHeight);
+uint32_t configScreenView();
 
 //This function is attached in a ticker to be called after every 1 second
 //This function will display Time elapsed, Speed and distance travelled
@@ -41,14 +41,15 @@ void mainScreenTickerFunc();
 //Gyroscope is read in this function at a 100HZ sampling rate
 //Speed and distance are displayed using a ticker function
 //Ticker is attached to mainScreenTickerFunc
-uint32_t mainScreenView(uint32_t screenWidth,uint32_t screenHeight);
+uint32_t mainScreenView();
 
 //This function is used to display the 4th and the final screen
 //Once the user stops and press Done button, it will display total distance travelled 
 //in complete journey with total time
 //If user Presses "TRY AGAIN", it will jum to starting screen of the device and Device is reset
-uint32_t resultScreenView(uint32_t screenWidth,uint32_t screenHeight);
+uint32_t resultScreenView();
 
 //Functions to hold the screen width and Height 
-uint32_t get_screenWidth();
-uint32_t get_screenHeight();
+uint32_t getScreenWidth();
+uint32_t getScreenHeight();
+
